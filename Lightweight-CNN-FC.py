@@ -22,47 +22,6 @@ Created on Wed Oct 11 22:14:27 2017
 @author: zhou
 """
 
-'''This script goes along the blog post
-"Building powerful image classification models using very little data"
-from blog.keras.io.
-It uses data that can be downloaded at:
-https://www.kaggle.com/c/dogs-vs-cats/data
-In our setup, we:
-- created a data/ folder
-- created train/ and validation/ subfolders inside data/
-- created cats/ and dogs/ subfolders inside train/ and validation/
-- put the cat pictures index 0-999 in data/train/cats
-- put the cat pictures index 1000-1400 in data/validation/cats
-- put the dogs pictures index 12500-13499 in data/train/dogs
-- put the dog pictures index 13500-13900 in data/validation/dogs
-So that we have 1000 training examples for each class, and 400 validation examples for each class.
-In summary, this is our directory structure:
-```
-data/
-    train/
-        dogs/
-            dog001.jpg
-            dog002.jpg
-            ...
-        cats/
-            cat001.jpg
-            cat002.jpg
-            ...
-    validation/
-        dogs/
-            dog001.jpg
-            dog002.jpg
-            ...
-        cats/
-            cat001.jpg
-            cat002.jpg
-            ...
-```
-'''
-#import cv2
-#import os
-#import numpy as np
-
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D,SeparableConv2D
@@ -167,30 +126,6 @@ nb_validation_samples = 60*43
 
 epochs = 10
 batch_size = 16
-
-#def __getnum__(path):  
-#    fm=os.listdir(path)  
-#    i=0  
-#    for f in fm:  
-#        ff= os.listdir(path+f+'/')  
-#        for n in ff:  
-#            i+=1  
-#    return i        
-#
-#def __data_label__(path,count):   
-#    data = np.empty((count,1,32,32),dtype="float32")  
-#    label = np.empty((count,),dtype="uint8")  
-#    i=0;  
-#    filename= os.listdir(path)  
-#    for ff in filename :  
-#        fi=os.listdir(path+ff+'/')  
-#        for f in fi:  
-#            img = cv2.imread(path+ff+'/'+f,0)  
-#            arr = np.asarray(img,dtype="float32")  
-#            data[i,:,:,:] = arr  
-#            label[i]=int(ff)  
-#            i+=1  
-#    return data,label
 
 img_width, img_height = 64, 64
 
