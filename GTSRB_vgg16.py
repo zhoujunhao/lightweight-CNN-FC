@@ -1,0 +1,720 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov 27 15:20:13 2017
+
+@author: zhou
+"""
+
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 31 15:23:03 2017
+
+@author: zhou
+"""
+
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 11 22:14:27 2017
+
+@author: zhou
+"""
+
+'''This script goes along the blog post
+"Building powerful image classification models using very little data"
+from blog.keras.io.
+It uses data that can be downloaded at:
+https://www.kaggle.com/c/dogs-vs-cats/data
+In our setup, we:
+- created a data/ folder
+- created train/ and validation/ subfolders inside data/
+- created cats/ and dogs/ subfolders inside train/ and validation/
+- put the cat pictures index 0-999 in data/train/cats
+- put the cat pictures index 1000-1400 in data/validation/cats
+- put the dogs pictures index 12500-13499 in data/train/dogs
+- put the dog pictures index 13500-13900 in data/validation/dogs
+So that we have 1000 training examples for each class, and 400 validation examples for each class.
+In summary, this is our directory structure:
+```
+data/
+    train/
+        dogs/
+            dog001.jpg
+            dog002.jpg
+            ...
+        cats/
+            cat001.jpg
+            cat002.jpg
+            ...
+    validation/
+        dogs/
+            dog001.jpg
+            dog002.jpg
+            ...
+        cats/
+            cat001.jpg
+            cat002.jpg
+            ...
+```
+'''
+#import cv2
+#import os
+#import numpy as np
+
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D,SeparableConv2D
+from keras.layers.normalization import BatchNormalization
+from keras.layers.advanced_activations import LeakyReLU
+from keras.regularizers import l2
+from keras.layers import Activation, Dropout, Flatten, Dense, Lambda
+from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
+from keras import optimizers
+#from keras.utils import np_utils
+#from  keras.callbacks import ModelCheckpoint, Callback  
+from keras import backend as K
+import matplotlib.pyplot as plt
+#import functools
+import matplotlib.lines as mlines
+import seaborn as sns
+import keras
+# dimensions of our images.
+
+#top5_acc = functools.partial(keras.metrics.top_k_categorical_accuracy, k=3)
+
+#top5_acc.__name__ = 'top5_acc'
+#img_width, img_height = 64, 64
+
+#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/train1'
+##train_data_dir = 'data/train'
+#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/test-da'
+
+###############################class43###################################
+train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/train'
+#train_data_dir = 'data/train'
+validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/test2'
+
+###############################vcifar100###################################
+#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-100-jpg/train_imgs/18'
+##train_data_dir = 'data/train'
+#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-100-jpg/test_imgs/18'
+
+###############################end#######################################
+
+################################cifar100_class_plant###################################
+#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/train_class/biological/plant'
+##train_data_dir = 'data/train'
+#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/test_class/biological/plant'
+
+################################cifar100_class_insert###################################
+#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/train_class/biological/animals/insects'
+##train_data_dir = 'data/train'
+#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/test_class/biological/animals/insects'
+################################cifar100###################################
+#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/train_imgs'
+##train_data_dir = 'data/train'
+#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/test_imgs'
+
+
+
+################################cifar10###################################
+#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-10/train'
+##train_data_dir = 'data/train'
+#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-10/test'
+
+###########################gtsrb_single#################################
+#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/train1'
+##train_data_dir = 'data/train'
+#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/test-da'
+############################end################################################
+
+
+#validation_data_dir = 'data/validation'
+#nb_train_samples = 1600*8
+#nb_validation_samples = 60*8
+
+########################################class43############################
+nb_train_samples = 1500*43
+nb_validation_samples = 60*43
+######################################end#################################
+
+#########################################cifar-100_class_plant############################
+#nb_train_samples = 500*10
+#nb_validation_samples = 100*10
+#######################################end#################################
+
+#########################################cifar-100############################
+#nb_train_samples = 500*100
+#nb_validation_samples = 100*100
+#######################################end#################################
+
+#########################################cifar-10############################
+#nb_train_samples = 5000*10
+#nb_validation_samples = 1000*10
+#######################################end#################################
+
+#########################################gtsrb_class8############################
+#nb_train_samples = 1500*8
+#nb_validation_samples = 60*8
+#######################################end#################################
+
+########################################class5############################
+#nb_train_samples = 500*5
+#nb_validation_samples = 100*5
+######################################end#################################
+
+epochs = 10
+batch_size = 16
+
+#def __getnum__(path):  
+#    fm=os.listdir(path)  
+#    i=0  
+#    for f in fm:  
+#        ff= os.listdir(path+f+'/')  
+#        for n in ff:  
+#            i+=1  
+#    return i        
+#
+#def __data_label__(path,count):   
+#    data = np.empty((count,1,32,32),dtype="float32")  
+#    label = np.empty((count,),dtype="uint8")  
+#    i=0;  
+#    filename= os.listdir(path)  
+#    for ff in filename :  
+#        fi=os.listdir(path+ff+'/')  
+#        for f in fi:  
+#            img = cv2.imread(path+ff+'/'+f,0)  
+#            arr = np.asarray(img,dtype="float32")  
+#            data[i,:,:,:] = arr  
+#            label[i]=int(ff)  
+#            i+=1  
+#    return data,label
+
+img_width, img_height = 64, 64
+
+if K.image_data_format() == 'channels_first':
+    input_shape = (3, img_width, img_height)
+else:
+    input_shape = (img_width, img_height, 3)
+
+
+def leakyCReLU(x):
+	x_pos = K.relu(x, .0)
+	x_neg = K.relu(-x, .0)
+	return K.concatenate([x_pos, x_neg], axis=1)
+	
+def leakyCReLUShape(x_shape):
+	shape = list(x_shape)
+	shape[1] *= 2
+	return tuple(shape)
+
+def conv_block(x_input, num_filters,pool=True,activation='relu',init='orthogonal'):
+	
+	x1 = Conv2D(num_filters,3,3, border_mode='same',W_regularizer=l2(1e-4),init=init)(x_input)
+	x1 = BatchNormalization(axis=1,momentum=0.995)(x1)
+	if activation == 'crelu':
+		x1 = Lambda(leakyCReLU, output_shape=leakyCReLUShape)(x1)
+	else:
+		x1 = LeakyReLU(.01)(x1)
+	# x1 = Convolution3D(num_filters,3,3,3, border_mode='same',W_regularizer=l2(1e-4))(x1)
+	# x1 = BatchNormalization(axis=1)(x1)
+	# x1 = LeakyReLU(.1)(x1)
+	
+	if pool:
+		x1 = MaxPooling2D()(x1)
+	x_out = x1
+	return x_out
+
+model = Sequential()
+
+
+#model = Sequential()
+
+
+####################################################### VGG16 ####################################################
+#model.add(Conv2D(64,(3,3),strides=(1,1),input_shape=(64,64,3),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(64,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(MaxPooling2D(pool_size=(2,2)))  
+#model.add(Conv2D(128,(3,2),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(128,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(MaxPooling2D(pool_size=(2,2)))  
+#model.add(Conv2D(256,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(256,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(256,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(MaxPooling2D(pool_size=(2,2)))  
+#model.add(Conv2D(512,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(512,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(512,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(MaxPooling2D(pool_size=(2,2)))  
+#model.add(Conv2D(512,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(512,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(512,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(MaxPooling2D(pool_size=(2,2)))  
+#model.add(Flatten())  
+##model.add(Dense(4096,activation='relu')) 
+#model.add(Dense(64,activation='relu'))   
+#model.add(Dropout(0.5))  
+#model.add(Dense(256,activation='relu'))  
+#model.add(Dropout(0.5))  
+#model.add(Dense(10,activation='softmax'))  
+##adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-8)
+#model.compile(loss='categorical_crossentropy',optimizer='sgd',metrics=['accuracy'])  
+#model.summary()  
+################################################################ end ##################################################
+
+
+#model.add(Conv2D(100, (7, 7), input_shape=input_shape))
+#model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(2, 2)))
+#
+#model.add(Conv2D(150, (4, 4)))
+#model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(2, 2)))
+#
+#model.add(Conv2D(250, (4, 4)))
+#model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(2, 2)))
+
+#model.add(Conv2D(128, (3, 3)))
+#model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(2, 2)))
+
+#model.add(Flatten())
+#model.add(Dense(300))
+#model.add(Activation('relu'))
+#model.add(Dropout(0.5))
+#
+#model.add(Dense(8))
+#model.add(Activation('softmax'))
+#model.add(Dense(1))
+#model.add(Activation('sigmoid'))
+
+################################################################### ALEX #######################################################
+
+#model.add(Conv2D(96,(11,11),strides=(4,4),input_shape=(64,64,3),padding='valid',activation='relu',kernel_initializer='uniform'))  
+#model.add(MaxPooling2D(pool_size=(2,2),strides=(2,2)))  
+#model.add(Conv2D(256,(5,5),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(MaxPooling2D(pool_size=(3,3),strides=(2,2)))  
+#model.add(Conv2D(384,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(384,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(Conv2D(256,(3,3),strides=(1,1),padding='same',activation='relu',kernel_initializer='uniform'))  
+#model.add(MaxPooling2D(pool_size=(3,3),strides=(2,2)))  
+#model.add(Flatten())  
+##model.add(Dense(4096,activation='relu'))  
+#model.add(Dense(64,activation='relu'))  
+#model.add(Dropout(0.5))  
+#model.add(Dense(64,activation='relu'))  
+#model.add(Dropout(0.5))  
+#model.add(Dense(8,activation='softmax'))  
+##adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-8)
+##rmsprop = optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-6)
+#sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+#model.compile(loss='categorical_crossentropy',optimizer='sgd',metrics=['accuracy'])  
+#model.summary() 
+
+################################################################## end ########################################################
+
+################################################################### FC #######################################################
+#model.add(Conv2D(32,kernel_size=(3,3),strides=(2,2), padding='same', input_shape=input_shape))
+##model.add(Conv2D(100,kernel_size=(3,3),strides=(2,2), padding='same', input_shape=input_shape))
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+##model.add(Conv2D(32,kernel_size=(3,3),strides=(2,2), padding='same', input_shape=input_shape))
+##x1 = conv_block(16, activation='crelu') 
+##model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+##model.add(Activation('relu'))
+##model.add(MaxPooling2D(pool_size=(2, 2)))
+##*****************************************************************************************************
+##model.add(DepthwiseConv2D(32,strides=(2,2),padding='same'))
+#model.add(SeparableConv2D(32,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+#model.add(BatchNormalization())
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+#model.add(Activation('relu'))
+#
+##model.add(Conv2D(32,kernel_size=(1,1),strides=(1,1), padding='same'))
+###model.add(MaxPooling2D(pool_size=(1, 1)))
+##model.add(BatchNormalization())
+##model.add(Activation('relu'))
+##model.add(Conv2D(32, (1, 1)))
+##model.add(BatchNormalization())
+##model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+##model.add(Activation('relu'))
+##model.add(MaxPooling2D(pool_size=(2, 2)))
+##outputs 13 ch
+##*****************************************************************************************************
+##model.add(SeparableConv2D(32,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(Conv2D(32, (3, 3)))
+##model.add(Conv2D(100, (3, 3)))
+#model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+##model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(2, 2)))
+#
+#
+#model.add(Conv2D(64, (3, 3)))
+##model.add(Conv2D(200, (3, 3)))
+#model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+##model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(2, 2)))
+########################################################### FCn ###########################################################################
+
+#####********conv0********************************
+print(input_shape)
+model.add(Conv2D(64,kernel_size=(3,3),strides=(2,2), padding='same', input_shape=input_shape))
+#model.add(Conv2D(100,kernel_size=(3,3),strides=(2,2), padding='same', input_shape=input_shape))
+#model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+#model.add(Conv2D(32,kernel_size=(3,3),strides=(2,2), padding='same', input_shape=input_shape))
+#x1 = conv_block(16, activation='crelu') 
+#model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+#model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(2, 2)))
+#*********************
+
+########********************************separable-block1********************************
+#model.add(DepthwiseConv2D(64,strides=(2,2),padding='same'))
+model.add(SeparableConv2D(64,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(MaxPooling2D(pool_size=(1, 1)))
+model.add(BatchNormalization())
+#model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+model.add(Activation('relu'))
+
+#######*pointwise
+model.add(Conv2D(64, (1, 1)))
+model.add(BatchNormalization())
+
+########********************************end**********************************************
+
+#####********conv1********************************
+model.add(Conv2D(64, (3, 3)))
+#model.add(Conv2D(100, (3, 3)))
+model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+#model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+#model.add(Conv2D(128, (3, 3)))
+##model.add(Conv2D(100, (3, 3)))
+#model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+##model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(1, 1)))
+#########***
+##model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+##model.add(Activation('relu'))
+##model.add(MaxPooling2D(pool_size=(2, 2)))
+##outputs 13 ch
+##****
+#
+#
+##model.add(SeparableConv2D(32,kernel_size=(3,3), strides=(2,2),padding='same'))
+#
+#######********************************separable-block2********************************
+model.add(SeparableConv2D(128,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(MaxPooling2D(pool_size=(1, 1)))
+model.add(BatchNormalization())
+#model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+model.add(Activation('relu'))
+
+#######*pointwise
+model.add(Conv2D(128, (1, 1)))
+model.add(BatchNormalization())
+
+
+#######********************************end**********************************************
+
+#####********conv2********************************
+model.add(Conv2D(128, (3, 3)))
+#model.add(Conv2D(200, (3, 3)))
+model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+#model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+
+
+########********************************separable-block3********************************
+model.add(SeparableConv2D(256,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(MaxPooling2D(pool_size=(1, 1)))
+model.add(BatchNormalization())
+#model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+model.add(Activation('relu'))
+#
+#######*pointwise
+model.add(Conv2D(256, (1, 1)))
+model.add(BatchNormalization())
+
+##########********************************separable-block4********************************
+model.add(SeparableConv2D(256,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+#model.add(MaxPooling2D(pool_size=(1, 1)))
+model.add(BatchNormalization())
+#model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+model.add(Activation('relu'))
+
+######*pointwise
+model.add(Conv2D(256, (1, 1)))
+model.add(BatchNormalization())
+##########********************************end*******************************************************************************************
+#########********************************separable-block5********************************
+#model.add(SeparableConv2D(256,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+#model.add(BatchNormalization())
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+#model.add(Activation('relu'))
+#
+########*pointwise
+#model.add(Conv2D(256, (1, 1)))
+#model.add(BatchNormalization())
+##model.add(Conv2D(32,kernel_size=(1,1),strides=(1,1), padding='same'))
+###model.add(MaxPooling2D(pool_size=(1, 1)))
+##model.add(BatchNormalization())
+##model.add(Activation('relu'))
+#########********************************separable-block6********************************
+#model.add(SeparableConv2D(256,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+#model.add(BatchNormalization())
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+#model.add(Activation('relu'))
+#
+########*pointwise
+#model.add(Conv2D(256, (1, 1)))
+#model.add(BatchNormalization())
+#########********************************end*********************************************
+#########********************************separable-block7********************************
+#model.add(SeparableConv2D(512,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+#model.add(BatchNormalization())
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+#model.add(Activation('relu'))
+#
+########*pointwise
+#model.add(Conv2D(512, (1, 1)))
+#model.add(BatchNormalization())
+##model.add(Conv2D(32,kernel_size=(1,1),strides=(1,1), padding='same'))
+###model.add(MaxPooling2D(pool_size=(1, 1)))
+##model.add(BatchNormalization())
+##model.add(Activation('relu'))
+#########********************************separable-block8********************************
+#model.add(SeparableConv2D(512,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(SeparableConv2D(100,kernel_size=(3,3), strides=(2,2),padding='same'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+#model.add(BatchNormalization())
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+#model.add(Activation('relu'))
+#
+########*pointwise
+#model.add(Conv2D(512, (1, 1)))
+#model.add(BatchNormalization())
+#########********************************end*********************************************
+#
+##model.add(Conv2D(256, (3, 3)))
+###model.add(Conv2D(200, (3, 3)))
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+###model.add(Activation('relu'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+######********conv1********************************
+##model.add(Conv2D(128, (3, 3)))
+###model.add(Conv2D(100, (3, 3)))
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+###model.add(Activation('relu'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+##
+#######********conv2********************************
+##model.add(Conv2D(128, (3, 3)))
+###model.add(Conv2D(200, (3, 3)))
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+###model.add(Activation('relu'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+##
+######********conv3********************************
+##model.add(Conv2D(256, (3, 3)))
+###model.add(Conv2D(200, (3, 3)))
+##model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+###model.add(Activation('relu'))
+##model.add(MaxPooling2D(pool_size=(1, 1)))
+#
+#
+##
+###model.add(Conv2D(128, (3, 3)))
+###model.add(Activation('relu'))
+###model.add(MaxPooling2D(pool_size=(2, 2)))
+##
+###model.add(Conv2D(128, (3, 3)))
+####model.add(Conv2D(200, (3, 3)))
+###model.add(Lambda(leakyCReLU, output_shape=leakyCReLUShape))
+####model.add(Activation('relu'))
+###model.add(MaxPooling2D(pool_size=(1, 1)))
+##
+##
+###model.add(SeparableConv2D(32,kernel_size=(3,3), strides=(1,1),padding='same'))
+####model.add(MaxPooling2D(pool_size=(1, 1)))
+###model.add(BatchNormalization())
+###model.add(Activation('relu'))
+####model.add(Conv2D(32,kernel_size=(1,1),strides=(1,1), padding='same'))
+#####model.add(MaxPooling2D(pool_size=(1, 1)))
+####model.add(BatchNormalization())
+####model.add(Activation('relu'))
+###
+###model.add(SeparableConv2D(64,kernel_size=(3,3), strides=(1,1),padding='same'))
+####model.add(MaxPooling2D(pool_size=(1, 1)))
+###model.add(BatchNormalization())
+###model.add(Activation('relu'))
+####model.add(Conv2D(64,kernel_size=(1,1),strides=(1,1), padding='same'))
+#####model.add(MaxPooling2D(pool_size=(1, 1)))
+####model.add(BatchNormalization())
+####model.add(Activation('relu'))
+###
+###model.add(SeparableConv2D(128,kernel_size=(3,3), strides=(1,1),padding='same'))
+####model.add(MaxPooling2D(pool_size=(1, 1)))
+###model.add(BatchNormalization())
+###model.add(Activation('relu'))
+####model.add(Conv2D(128,kernel_size=(1,1),strides=(1,1), padding='same'))
+#####model.add(MaxPooling2D(pool_size=(1, 1)))
+####model.add(BatchNormalization())
+###model.add(Activation('relu'))
+#
+model.add(Flatten())
+model.add(Dense(256))
+model.add(Activation('relu'))
+model.add(Dropout(0.5))
+
+model.add(Dense(43))
+model.add(Activation('softmax'))
+#model.add(Dense(1))
+#model.add(Activation('sigmoid'))
+
+sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+#adagrad = optimizers.Adagrad(lr=0.01, epsilon=1e-6)
+#adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-8)
+#rmsprop = optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-6)
+model.compile(loss='categorical_crossentropy',
+              optimizer='sgd',
+              metrics=['accuracy'])
+model.summary()  
+################################################################## end ########################################################
+#model.compile(loss='categorical_crossentropy',
+#              optimizer='rmsprop',
+#              metrics=['accuracy'])
+
+# this is the augmentation configuration we will use for training
+train_datagen = ImageDataGenerator(
+    rescale=1. / 255,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True)
+
+# this is the augmentation configuration we will use for testing:
+# only rescaling
+test_datagen = ImageDataGenerator(rescale=1. / 255)
+#test_datagen = np_utils.to_categorical(test_datagen, 43)
+
+train_generator = train_datagen.flow_from_directory(
+    train_data_dir,
+    target_size=(img_width, img_height),
+    batch_size=batch_size,
+    class_mode='categorical')
+
+validation_generator = test_datagen.flow_from_directory(
+    validation_data_dir,
+    target_size=(img_width, img_height),
+    batch_size=batch_size,
+    class_mode='categorical')
+
+#validation_generator = np_utils.to_categorical(validation_generator, 43)
+#filepath="weights-improvement-{epoch:02d}-{accuracy:.2f}.hdf5"
+#checkpoint = ModelCheckpoint(filepath, monitor='accuracy', verbose=1, save_best_only=True,mode='max')
+#callbacks_list = [checkpoint]
+
+
+
+result = model.fit_generator(
+    train_generator,
+    steps_per_epoch=nb_train_samples // batch_size,
+    epochs=epochs,
+    validation_data=validation_generator,
+    validation_steps=nb_validation_samples // batch_size)
+
+with open('20181014_fc4_gtsrb_e10_d256_sgd_doublep.txt','w') as f:
+    f.write(str(result.history))
+
+model.save('220181014_fc4_gtsrb_e10_d256_sgd_doublep.h5')
+
+#plt.figure
+#plt.plot(result.epoch,result.history['acc'],label="acc")
+#plt.plot(result.epoch,result.history['val_acc'],label="val_acc")
+#plt.scatter(result.epoch,result.history['acc'],marker='*')
+#plt.scatter(result.epoch,result.history['val_acc'])
+#plt.legend(loc='under right')
+#plt.show()
+#plt.figure
+#plt.plot(result.epoch,result.history['loss'],label="loss")
+#plt.plot(result.epoch,result.history['val_loss'],label="val_loss")
+#plt.scatter(result.epoch,result.history['loss'],marker='*')
+#plt.scatter(result.epoch,result.history['val_loss'],marker='*')
+#plt.legend(loc='upper right')
+#plt.show()
+
+sns.set_style('whitegrid')
+sns.set_context('paper',font_scale=1.5,rc={"lines.linewidth":2.0})
+plt.figure
+plt.plot(result.epoch,result.history['acc'],label="Training",c='r')
+plt.plot(result.epoch,result.history['val_acc'],label="Validation",linestyle="--",c='b')
+plt.scatter(result.epoch,result.history['acc'],s=150,c='r')
+plt.scatter(result.epoch,result.history['val_acc'],marker='*',s=200,c='b')
+plt.xlabel('Number of Epochs')
+plt.ylabel('Accuracy')
+ta = mlines.Line2D([], [], color='red', marker='.',
+                          markersize=15, label='Training')
+va = mlines.Line2D([], [], color='blue', marker='*',linestyle="--",
+                          markersize=15, label='Validation')
+
+plt.legend(handles=[ta,va],loc='lower right',fontsize=12,frameon=True,edgecolor='black')
+#plt.grid()
+#plt.savefig("gtsrb_fc_8_1_d64_sgd_doublep_acc.eps", format='eps', dpi=1000)
+plt.savefig("gtsrb_fc4_10_14_e10_acc_sgd.eps", format='eps', dpi=1000)
+
+sns.set_style('whitegrid')
+sns.set_context('paper',font_scale=1.5,rc={"lines.linewidth":2.0})
+plt.clf()
+plt.figure
+plt.plot(result.epoch,result.history['loss'],label="Training",c='r')
+plt.plot(result.epoch,result.history['val_loss'],label="Validation",linestyle="--",c='b')
+plt.scatter(result.epoch,result.history['loss'],s=150,c='r')
+plt.scatter(result.epoch,result.history['val_loss'],marker='*',s=200,c='b')
+
+#plt.plot(result.epoch,result.history['loss'],label="Training",linestyle="--",c='b')
+#plt.plot(result.epoch,result.history['val_loss'],label="Validation",c='r')
+#plt.scatter(result.epoch,result.history['loss'],marker='*', s=200,c='b')
+#plt.scatter(result.epoch,result.history['val_loss'], s=150,c='r')
+plt.xlabel('Number of Epochs')
+plt.ylabel('Loss')
+tl = mlines.Line2D([], [], color='red', marker='.',
+                          markersize=15, label='Training')
+vl = mlines.Line2D([], [], color='blue', marker='*',linestyle="--",
+                          markersize=15, label='Validation')
+#tl = mlines.Line2D([], [], color='blue', marker='*',linestyle="--",
+#                          markersize=15, label='Training')
+#vl = mlines.Line2D([], [], color='red', marker='.',
+#                          markersize=15, label='Validation')
+plt.legend(handles=[tl,vl],loc='upper right',fontsize=12,frameon=True,edgecolor='black')
+#plt.grid()
+#plt.savefig("gtsrb_fc_8_1_d64_sgd_doublep_loss.eps", format='eps', dpi=1000)
+plt.savefig("gtsrb_fc4_10_14_e10_loss_sgd.eps", format='eps', dpi=1000)
+plt. close(0)
+## summarize history for loss
+#plt.plot(history.history['loss'])
+#plt.plot(history.history['val_loss'])
+#plt.title('model loss')
+#plt.ylabel('loss')
+#plt.xlabel('epoch')
+#plt.legend(['train', 'test'], loc='upper left')
+#plt.show()
+
+
+#model.save('fc1_gtsrb_vgg16_d256_sgd.h5')
+#model.save_weights('GB_first_try.h5')
