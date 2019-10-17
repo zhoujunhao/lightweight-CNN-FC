@@ -46,42 +46,20 @@ import keras
 #top5_acc.__name__ = 'top5_acc'
 #img_width, img_height = 64, 64
 
-#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/train1'
-##train_data_dir = 'data/train'
-#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/test-da'
-
 ###############################class43###################################
-train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/train'
-#train_data_dir = 'data/train'
-validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/test'
+train_data_dir = 'data/gtsrb_43/train'
+validation_data_dir = 'data/gtsrb_43/test'
 
 ###############################vcifar100###################################
-#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-100-jpg/train_imgs/18'
-##train_data_dir = 'data/train'
-#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-100-jpg/test_imgs/18'
+#train_data_dir = 'data/vcifar-100-jpg/train_imgs/18'
+#validation_data_dir = 'data/vcifar-100-jpg/test_imgs/18'
 
 ###############################end#######################################
-
-###########################gtsrb_single#################################
-#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/train1'
-##train_data_dir = 'data/train'
-#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/test-da'
-############################end################################################
-
-
-#validation_data_dir = 'data/validation'
-#nb_train_samples = 1600*8
-#nb_validation_samples = 60*8
 
 ########################################class43############################
 nb_train_samples = 1500*43
 nb_validation_samples = 60*43
 ######################################end#################################
-
-#########################################gtsrb_class8############################
-#nb_train_samples = 1500*8
-#nb_validation_samples = 60*8
-#######################################end#################################
 
 ########################################class5############################
 #nb_train_samples = 500*5
