@@ -62,27 +62,6 @@ validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/te
 
 ###############################end#######################################
 
-################################cifar100_class_plant###################################
-#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/train_class/biological/plant'
-##train_data_dir = 'data/train'
-#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/test_class/biological/plant'
-
-################################cifar100_class_insert###################################
-#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/train_class/biological/animals/insects'
-##train_data_dir = 'data/train'
-#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/test_class/biological/animals/insects'
-################################cifar100###################################
-#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/train_imgs'
-##train_data_dir = 'data/train'
-#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar100/test_imgs'
-
-
-
-################################cifar10###################################
-#train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-10/train'
-##train_data_dir = 'data/train'
-#validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-10/test'
-
 ###########################gtsrb_single#################################
 #train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/train1'
 ##train_data_dir = 'data/train'
@@ -98,21 +77,6 @@ validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/te
 nb_train_samples = 1500*43
 nb_validation_samples = 60*43
 ######################################end#################################
-
-#########################################cifar-100_class_plant############################
-#nb_train_samples = 500*10
-#nb_validation_samples = 100*10
-#######################################end#################################
-
-#########################################cifar-100############################
-#nb_train_samples = 500*100
-#nb_validation_samples = 100*100
-#######################################end#################################
-
-#########################################cifar-10############################
-#nb_train_samples = 5000*10
-#nb_validation_samples = 1000*10
-#######################################end#################################
 
 #########################################gtsrb_class8############################
 #nb_train_samples = 1500*8
