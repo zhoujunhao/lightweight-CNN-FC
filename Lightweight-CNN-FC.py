@@ -53,7 +53,7 @@ import keras
 ###############################class43###################################
 train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/train'
 #train_data_dir = 'data/train'
-validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/test2'
+validation_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Linux/GTSRB_DL/GTSRB/test/test'
 
 ###############################vcifar100###################################
 #train_data_dir = '/media/zhou/0EB40C8C0EB40C8C/Chrome Downloads/othercar/cifar-100-jpg/train_imgs/18'
