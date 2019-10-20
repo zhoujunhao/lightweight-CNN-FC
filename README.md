@@ -48,6 +48,7 @@ This repository performs the experiments on two platforms: a PC and an MEC platf
 ## Train the model
 
 **Run command below to train the model:**
+
 Train Lightweight-CNN-FC model based on GTSRB data.
 ```
 python Lightweight-CNN-FC.py
