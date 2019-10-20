@@ -10,9 +10,10 @@ This stacked convolutional structure consists of factorization convolutional lay
 GTSRB dataset contains more than 50,000 traffic sign images, which have been categorized into 40 classes. We select three major categories: Speed-limit signs, Direction signs and Attention signs.
 
 <p align="center">
-  <img width="300" height="80" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset1.PNG">
+  <img width="550" height="250" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset1.PNG">
 </p>
 
+VCifar-100 dataset contains 5 classes: bicycles, buses, motorcycles, pickup trucks, trains.
 <p align="center">
   <img width="300" height="80" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset2.PNG">
 </p>
