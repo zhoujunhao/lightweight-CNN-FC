@@ -6,3 +6,15 @@ This is the Keras implementation of Lightweight-CNN-FC using functional API. The
 
 This stacked convolutional structure consists of factorization convolutional layers alternating with compression layers.
 
+## Dataset
+GTRSRB
+<p align="center">
+  <img width="550" height="250" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset1.PNG">
+</p>
+VCifar-100
+<p align="center">
+  <img width="300" height="80" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset2.PNG">
+</p>
+
+
+
