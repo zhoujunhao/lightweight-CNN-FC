@@ -28,8 +28,6 @@ This repository performs the experiments on two platforms: a PC and an MEC platf
 - Graphics: NVIDIA GTX 1050
 - OS: Ubuntu 16.04
 
-It is worth mentioning that Jetson TX2 module is mainly designed for MEC with small size and low power consumption. This embedded platform features an integrated 256-core NVIDIA Pascal GPU, a hex-core ARMv8 CPU, and 8GB of LPDDR4 memory.
-
 **MEC: Jetson TX2 Module**
 - Processor: ARM Cortex-A57 + NVIDIA Denver2
 - Memory (RAM): 8 GB
