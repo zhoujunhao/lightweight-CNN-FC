@@ -52,4 +52,7 @@ Train Lightweight-CNN-FC model based on GTSRB data.
 ```
 python Lightweight-CNN-FC.py
 ```
-
+Train the baseline models. For example, you can train VGG16 model as the baseline model.
+```
+python baseline_vgg16.py
+```
