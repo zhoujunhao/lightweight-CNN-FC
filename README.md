@@ -57,3 +57,11 @@ python Lightweight-CNN-FC.py
 ```
 python baseline_vgg16.py
 ```
+
+## Citation
+```
+@article{zhoulightweight,
+  title={Lightweight Convolution Neural Networks for Mobile Edge Computing in Transportation Cyber Physical Systems},
+  author={Zhou, Junhao and Dai, Hong-Ning and Wang, Hao}
+}
+```
