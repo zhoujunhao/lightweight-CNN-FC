@@ -22,7 +22,7 @@ This stacked convolutional structure consists of factorization convolutional lay
 
 This repository performs the experiments on two platforms: a PC and an MEC platform (i.e., Jetson TX2 module).
 
-**PC**
+**PC Platform**
 - Processor: Intel Core i7-7700HQ
 - Memory (RAM): 16 GB
 - Graphics: NVIDIA GTX 1050
