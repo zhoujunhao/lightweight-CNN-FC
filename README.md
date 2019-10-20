@@ -18,8 +18,7 @@ This stacked convolutional structure consists of factorization convolutional lay
   <img width="330" height="80" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset2.PNG">
 </p>
 
-## Experiment
-**Experimental environment**
+## Experimental Environment
 
 This repository performs the experiments on two platforms: a PC and an MEC platform (i.e., Jetson TX2 module).
 
@@ -32,3 +31,19 @@ It is worth mentioning that Jetson TX2 module is mainly designed for MEC with sm
 <p align="center">
   <img width="350" height="250" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/mec.PNG">
 </p>
+
+## Installation
+
+- Python 2.7
+- Tensorflow-gpu 1.5.0
+- Keras 2.1.3
+- scikit-learn 0.19
+
+## Train the model
+
+**Run command below to train the model:**
+Train Lightweight-CNN-FC model based on GTSRB data.
+```
+python Lightweight-CNN-FC.py
+```
+
