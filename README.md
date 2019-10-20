@@ -15,8 +15,17 @@ This stacked convolutional structure consists of factorization convolutional lay
 
 **VCifar-100** dataset contains 5 classes: bicycles, buses, motorcycles, pickup trucks, trains.
 <p align="center">
-  <img width="300" height="80" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset2.PNG">
+  <img width="330" height="80" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset2.PNG">
 </p>
 
 ## Experiment
-**Experimental Environment**
+**Experimental environment**
+This repository performs the experiments on two platforms: a PC and an MEC platform (i.e., Jetson TX2 module).
+
+<p align="center">
+  <img width="350" height="250" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/ee.PNG">
+</p>
+
+<p align="center">
+  <img width="350" height="250" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/mec.PNG">
+</p>
