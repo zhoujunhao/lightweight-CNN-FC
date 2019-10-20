@@ -22,11 +22,19 @@ This stacked convolutional structure consists of factorization convolutional lay
 
 This repository performs the experiments on two platforms: a PC and an MEC platform (i.e., Jetson TX2 module).
 
-<p align="center">
-  <img width="350" height="250" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/ee.PNG">
-</p>
+**PC**
+- Processor: Intel Core i7-7700HQ
+- Memory (RAM): 16 GB
+- Graphics: NVIDIA GTX 1050
+- OS: Ubuntu 16.04
 
 It is worth mentioning that Jetson TX2 module is mainly designed for MEC with small size and low power consumption. This embedded platform features an integrated 256-core NVIDIA Pascal GPU, a hex-core ARMv8 CPU, and 8GB of LPDDR4 memory.
+
+**MEC: Jetson TX2 Module**
+- Processor: ARM Cortex-A57 + NVIDIA Denver2
+- Memory (RAM): 8 GB
+- Graphics: NVIDIA 256-core Pascal
+- OS: Ubuntu 16.04
 
 <p align="center">
   <img width="350" height="250" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/mec.PNG">
