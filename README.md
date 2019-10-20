@@ -18,3 +18,4 @@ VCifar-100 dataset contains 5 classes: bicycles, buses, motorcycles, pickup truc
   <img width="300" height="80" src="https://github.com/zhoujunhao/lightweight-CNN-FC/blob/master/fig/dataset2.PNG">
 </p>
 
+## Experiment
